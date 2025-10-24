@@ -2,11 +2,16 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exemplo.Controller.ViewController">
    <children>
-      <Button fx:id="myButton" layoutX="167.0" layoutY="125.0" mnemonicParsing="false" onAction="#initialize" text="Button" />
-      <Label layoutX="162.0" layoutY="100.0" text="Clique Aqui" />
+      <Label layoutX="38.0" layoutY="41.0" text="Calculadora Soma" />
+      <TextField fx:id="soma1" layoutX="38.0" layoutY="82.0" promptText="Primeiro N°" />
+      <TextField fx:id="soma2" layoutX="38.0" layoutY="125.0" promptText="Segundo N°" />
+      <Button fx:id="btnSomar" layoutX="38.0" layoutY="171.0" mnemonicParsing="false" onAction="#onBtnSomarClick" text="Soma" />
+      <Label layoutX="38.0" layoutY="227.0" prefHeight="17.0" prefWidth="73.0" text="Resultado = " />
+      <Label fx:id="labelResultado" layoutX="113.0" layoutY="227.0" />
    </children>
 </AnchorPane>
