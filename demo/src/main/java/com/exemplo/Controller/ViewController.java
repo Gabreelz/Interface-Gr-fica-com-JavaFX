@@ -2,45 +2,54 @@ package com.exemplo.Controller;
 
 
 import java.net.URL;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
-import com.exemplo.Util.Constraints;
+import com.Entities.Person;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Labeled;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
 public class ViewController implements Initializable{
     
     @FXML
-    private TextField soma1;
+    private ComboBox<Person> comboBoxPerson;
+    
+    private ObservableList<Person> obsList;
     
     @FXML
-    private TextField soma2;
-    
-    @FXML 
-    private Button btnSomar;
-
-    @FXML
-    private Labeled labelResultado;
-
-    @FXML
-    public void onBtnSomarClick() {
-        Locale.setDefault(Locale.US);
-        double num1 = Double.parseDouble(soma1.getText());
-        double num2 = Double.parseDouble(soma2.getText());
-        double resultado = num1 + num2;
-        labelResultado.setText(String.format("%.2f", resultado));
+    public void onComboBoxPersonAction() {
+        Person person = comboBoxPerson.getSelectionModel().getSelectedItem();
+        System.out.println(person);
     }
-    
+
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        Constraints.setTextFieldDouble(soma1);
-        Constraints.setTextFieldDouble(soma2);
-        Constraints.setTextFieldMaxLength(soma1, 10);
-        Constraints.setTextFieldMaxLength(soma2, 10);
+        List<Person> list = new ArrayList<>();
+            list.add(new Person(1, "Peter Parker", "clarimDiario@gmail.com"));
+            list.add(new Person(2, "Tony Stark", "stark@gmail.com"));
+            list.add(new Person(3, "Steve Rogers", "Ameria@gmail.com"));
+
+            obsList = FXCollections.observableArrayList(list);
+            comboBoxPerson.setItems(obsList);
+
+            //Para o ComboBox mostrar somente o nome da pessoa
+            Callback<ListView<Person>, ListCell<Person>> factory = lv -> new ListCell<Person>() {
+                @Override
+                    protected void updateItem(Person item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty ? "" : item.getName());
+                }
+            };
+            
+    comboBoxPerson.setCellFactory(factory);
+    comboBoxPerson.setButtonCell(factory.call(null));
     }    
 }
