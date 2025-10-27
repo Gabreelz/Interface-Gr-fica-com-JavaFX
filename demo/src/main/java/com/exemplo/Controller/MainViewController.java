@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.Services.DepartmentService;
 import com.exemplo.App;
 import com.exemplo.Util.Alerts;
 
@@ -35,7 +36,7 @@ public class MainViewController implements Initializable{
 
     @FXML
     public void onMenuItemDepartmentAction() {
-        System.out.println("Department menu item clicked");
+        loadView2("/com/exemplo/DepartamentList.fxml");
     }
 
     @FXML
@@ -49,9 +50,9 @@ public class MainViewController implements Initializable{
 
     // Tela About - 
     // Método para carregar uma nova view About dentro da interface principal
-    private synchronized void loadView(String absoluteName) {
+    private synchronized void loadView(String LinkAbout) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(LinkAbout));
             VBox newVBox = loader.load();
             
             Scene mainScene = App.getMainScene();
@@ -74,4 +75,27 @@ public class MainViewController implements Initializable{
             Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
         }
     }
+
+    private synchronized void loadView2(String linkDepartment) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(linkDepartment));
+			VBox newVBox = loader.load();
+			
+			Scene mainScene = App.getMainScene();
+			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+			
+			Node mainMenu = mainVBox.getChildren().get(0);
+			mainVBox.getChildren().clear();
+			mainVBox.getChildren().add(mainMenu);
+			mainVBox.getChildren().addAll(newVBox.getChildren());
+			
+			DepartmentController controller = loader.getController();
+			controller.setDepartmentService(new DepartmentService());
+			controller.updateTableView();
+		}
+		catch (IOException e) {
+			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
+		}
+	}
+
 }
