@@ -2,6 +2,7 @@ module com.exemplo {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
+    requires java.sql;
 
     // Abre o pacote principal para o JavaFX conseguir carregar a classe App
     opens com.exemplo to javafx.graphics;
