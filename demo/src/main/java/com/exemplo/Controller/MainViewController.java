@@ -3,6 +3,7 @@ package com.exemplo.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import com.Services.DepartmentService;
 import com.exemplo.App;
@@ -36,47 +37,24 @@ public class MainViewController implements Initializable{
 
     @FXML
     public void onMenuItemDepartmentAction() {
-        loadView2("/com/exemplo/DepartamentList.fxml");
+        loadView("/com/exemplo/DepartamentList.fxml", (DepartmentController controller) -> {
+            controller.setDepartmentService(new DepartmentService());
+            controller.updateTableView();
+        });
     }
 
     @FXML
     public void onMenuItemAboutAction() {       
-        loadView("/com/exemplo/About.fxml");
+        loadView("/com/exemplo/About.fxml", x -> {});
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }
 
-    // Tela About - 
+    // Tela 
     // Método para carregar uma nova view About dentro da interface principal
-    private synchronized void loadView(String LinkAbout) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(LinkAbout));
-            VBox newVBox = loader.load();
-            
-            Scene mainScene = App.getMainScene();
-                
-            VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
-            
-            // Guarda o menu principal
-            Node mainMenu = mainVBox.getChildren().get(0);
-            
-            // Limpa todos os elementos do VBox principal
-            mainVBox.getChildren().clear();
-            
-            // Adiciona novamente o menu principal para que ele permaneça fixo
-            mainVBox.getChildren().add(mainMenu);
-            
-            // Adiciona todos os elementos da nova view carregada ao VBox principal
-            mainVBox.getChildren().addAll(newVBox.getChildren());
-        } 
-        catch (IOException e) {
-            Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
-        }
-    }
-
-    private synchronized void loadView2(String linkDepartment) {
+    private synchronized <T> void loadView(String linkDepartment, Consumer<T> initializingAction) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(linkDepartment));
 			VBox newVBox = loader.load();
@@ -89,9 +67,8 @@ public class MainViewController implements Initializable{
 			mainVBox.getChildren().add(mainMenu);
 			mainVBox.getChildren().addAll(newVBox.getChildren());
 			
-			DepartmentController controller = loader.getController();
-			controller.setDepartmentService(new DepartmentService());
-			controller.updateTableView();
+			T controller = loader.getController();
+            initializingAction.accept(controller);
 		}
 		catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
