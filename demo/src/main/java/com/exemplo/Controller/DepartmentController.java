@@ -8,7 +8,7 @@ import com.Entities.Department;
 import com.Services.DepartmentService;
 import com.exemplo.App;
 import com.exemplo.Util.Alerts;
-import com.exemplo.Util.util;
+import com.exemplo.Util.utils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,7 +46,7 @@ public class DepartmentController implements Initializable{
 
     @FXML
     private void onBtNewAction(ActionEvent event) {
-        Stage parentStage = util.atualStage(event);
+        Stage parentStage = utils.atualStage(event);
         Department obj = new Department();
         createDialogForm(obj,"/com/exemplo/DepartmentForm.fxml", parentStage);
     }
@@ -86,6 +86,11 @@ public class DepartmentController implements Initializable{
             FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
             Pane pane = loader.load();
 
+            DepartmentFormController controller = loader.getController();
+            controller.setEntity(obj);
+            controller.setDepartmentService(new DepartmentService());
+            controller.updateFormData();
+
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Enter Department data");
 			dialogStage.setScene(new Scene(pane));
@@ -93,10 +98,6 @@ public class DepartmentController implements Initializable{
 			dialogStage.initOwner(parentStage);
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.showAndWait();
-
-            DepartmentFormController controller = loader.getController();
-            controller.setEntity(obj);
-            controller.updateFormData();
 
         } catch (Exception e) {
             Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
