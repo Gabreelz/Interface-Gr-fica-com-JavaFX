@@ -9,6 +9,7 @@ import com.Services.DepartmentService;
 import com.exemplo.App;
 import com.exemplo.Util.Alerts;
 import com.exemplo.Util.utils;
+import com.listeners.DataChangeListener;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,7 +27,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class DepartmentController implements Initializable{
+public class DepartmentController implements Initializable, DataChangeListener{
 
     private DepartmentService service;
 
@@ -89,6 +90,7 @@ public class DepartmentController implements Initializable{
             DepartmentFormController controller = loader.getController();
             controller.setEntity(obj);
             controller.setDepartmentService(new DepartmentService());
+            controller.subscribeDataChangeListener(this);
             controller.updateFormData();
 
             Stage dialogStage = new Stage();
@@ -103,6 +105,11 @@ public class DepartmentController implements Initializable{
             Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
         }
     }
+
+    @Override
+	public void onDataChanged() {
+		updateTableView();
+	}
 
     
 }
